@@ -25,3 +25,4 @@ app.listen(PORT, () => console.log(`server live on port ${PORT}`));
 // routes
 app.use("/auth", require("./routes/auth"));
 app.use("/profile", require("./routes/profile"));
+app.use("/project", require("./routes/project"));

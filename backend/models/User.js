@@ -32,6 +32,9 @@ module.exports = mongoose.model(
 		avatar: {
 			type: String,
 		},
+		resume: {
+			type: String,
+		},
 		github: {
 			type: String,
 		},
@@ -40,6 +43,10 @@ module.exports = mongoose.model(
 			default: [],
 		},
 		tools: {
+			type: [String],
+			default: [],
+		},
+		projects: {
 			type: [String],
 			default: [],
 		},
