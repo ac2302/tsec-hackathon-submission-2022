@@ -27,3 +27,4 @@ app.use("/auth", require("./routes/auth"));
 app.use("/profile", require("./routes/profile"));
 app.use("/project", require("./routes/project"));
 app.use("/chat", require("./routes/chat"));
+app.use("/board", require("./routes/board"));
