@@ -16,11 +16,53 @@ router.post("/:projectName", authOnlyMiddleware, async (req, res) => {
 			description: req.body.description,
 		});
 
+		res.user.projects.push(req.params.projectName);
+		await res.user.save();
+
 		res.json(await project.save());
 	} catch (err) {
 		res.status(400).json({ msg: "invalid request", err });
 	}
 });
+
+router.post("/:projectName/apply", authOnlyMiddleware, async (req, res) => {
+	try {
+		// checking if project exists
+		const projects = await Project.find({ name: req.params.projectName });
+		if (projects.length == 0)
+			return res.status(400).json({ msg: "project does not exist" });
+
+		projects[0].applicants.push(req.user.username);
+		await projects[0].save();
+
+		res.json({ msg: "succesfully applied" });
+	} catch (err) {
+		res.status(400).json({ msg: "invalid request", err });
+	}
+});
+
+router.post(
+	"/:projectName/accept/:username",
+	authOnlyMiddleware,
+	async (req, res) => {
+		try {
+			// checking if project exists
+			const projects = await Project.find({ name: req.params.projectName });
+			if (projects.length == 0)
+				return res.status(400).json({ msg: "project does not exist" });
+
+			if (!projects[0].applicants.includes(req.params.username))
+				return res.status(400).json({ msg: "user not in applicants" });
+
+			projects[0].applicants.filter((e) => e != req.params.username);
+			projects[0].members.push(req.params.username);
+
+			res.json(await projects[0].save());
+		} catch (err) {
+			res.status(400).json({ msg: "invalid request", err });
+		}
+	}
+);
 
 router.patch("/:projectName", authOnlyMiddleware, async (req, res) => {
 	try {
