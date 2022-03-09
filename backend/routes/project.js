@@ -54,7 +54,9 @@ router.post(
 			if (!projects[0].applicants.includes(req.params.username))
 				return res.status(400).json({ msg: "user not in applicants" });
 
-			projects[0].applicants.filter((e) => e != req.params.username);
+			projects[0].applicants = projects[0].applicants.filter(
+				(e) => e != req.params.username
+			);
 			projects[0].members.push(req.params.username);
 
 			res.json(await projects[0].save());
