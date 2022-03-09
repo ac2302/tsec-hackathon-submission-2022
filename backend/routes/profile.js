@@ -17,7 +17,7 @@ router.patch("/self", authOnlyMiddleware, async (req, res) => {
 router.get("/user/:username", authOnlyMiddleware, async (req, res) => {
 	const users = await User.find({ username: req.params.username });
 
-	if (screen.length === 1) {
+	if (users.length === 1) {
 		res.json(users[0]);
 	} else {
 		res.status(400).json({ msg: "invalid user" });

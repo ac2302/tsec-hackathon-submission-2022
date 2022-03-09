@@ -16,7 +16,7 @@ router.post("/:projectName", authOnlyMiddleware, async (req, res) => {
 			description: req.body.description,
 		});
 
-		res.json(project.save);
+		res.json(await project.save());
 	} catch (err) {
 		res.status(400).json({ msg: "invalid request", err });
 	}
@@ -39,7 +39,7 @@ router.patch("/:projectName", authOnlyMiddleware, async (req, res) => {
 router.get("/:projectName", authOnlyMiddleware, async (req, res) => {
 	const projects = await Project.find({ name: req.params.projectName });
 
-	if (screen.length === 1) {
+	if (projects.length === 1) {
 		res.json(projects[0]);
 	} else {
 		res.status(400).json({ msg: "invalid project" });
