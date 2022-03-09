@@ -16,11 +16,12 @@ router.post("/:projectName", authOnlyMiddleware, async (req, res) => {
 			description: req.body.description,
 		});
 
-		res.user.projects.push(req.params.projectName);
-		await res.user.save();
+		req.user.projects.push(req.params.projectName);
+		await req.user.save();
 
 		res.json(await project.save());
 	} catch (err) {
+		console.error(err);
 		res.status(400).json({ msg: "invalid request", err });
 	}
 });
@@ -119,13 +120,15 @@ router.post(
 router.patch("/:projectName", authOnlyMiddleware, async (req, res) => {
 	try {
 		const props = Object.getOwnPropertyNames(req.body);
-		const project = Project.findOne({ name: req.params.projectName });
+		const project = await Project.findOne({ name: req.params.projectName });
 
 		props.forEach((prop) => {
 			project[prop] = req.body[prop];
 		});
+		console.log({ project });
 		res.json(await project.save());
 	} catch (err) {
+		console.log(err);
 		res.status(400).json({ msg: "invalid request", err });
 	}
 });

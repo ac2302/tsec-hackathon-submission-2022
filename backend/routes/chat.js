@@ -7,9 +7,9 @@ const authOnlyMiddleware = require("../middlewares/authOnly");
 router.post("/:projectName", authOnlyMiddleware, async (req, res) => {
 	try {
 		// checking if chat exists
-		const projects = await Project.find({ name: req.params.projectName });
-		if (projects.length == 0)
-			return res.status(400).json({ msg: "project does not exist" });
+		const chats = await Chat.find({ project: req.params.projectName });
+		if (chats.length != 0)
+			return res.status(400).json({ msg: "chat already exists" });
 
 		const chat = new Chat({ project: req.params.projectName });
 
@@ -41,7 +41,7 @@ router.post("/:projectName/message", authOnlyMiddleware, async (req, res) => {
 router.get("/:projectName", authOnlyMiddleware, async (req, res) => {
 	const chats = await Chat.find({ project: req.params.projectName });
 
-	if (chats.length === 1) {
+	if (chats.length > 0) {
 		res.json(chats[0]);
 	} else {
 		res.status(400).json({ msg: "invalid project" });
