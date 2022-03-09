@@ -146,4 +146,9 @@ router.get("/:projectName", authOnlyMiddleware, async (req, res) => {
 	}
 });
 
+router.get("/", async (req, res) => {
+	const projects = await Project.find();
+	res.json(projects);
+});
+
 module.exports = router;
