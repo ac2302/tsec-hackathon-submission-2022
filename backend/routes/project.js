@@ -33,6 +33,9 @@ router.post("/:projectName/apply", authOnlyMiddleware, async (req, res) => {
 		if (projects.length == 0)
 			return res.status(400).json({ msg: "project does not exist" });
 
+		if (projects[0].applicants.includes(req.user.username))
+			return res.status(400).json({ msg: "you have already applied" });
+
 		projects[0].applicants.push(req.user.username);
 		await projects[0].save();
 
