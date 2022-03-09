@@ -10,6 +10,18 @@ const languageSchema = new mongoose.Schema({
 	},
 });
 
+const workExperienceSchema = new mongoose.Schema({
+	duration: {
+		type: String,
+	},
+	position: {
+		type: String,
+	},
+	company: {
+		type: String,
+	},
+});
+
 module.exports = mongoose.model(
 	"User",
 	new mongoose.Schema({
@@ -52,6 +64,10 @@ module.exports = mongoose.model(
 		},
 		languages: {
 			type: [languageSchema],
+			default: [],
+		},
+		workExperience: {
+			type: [workExperienceSchema],
 			default: [],
 		},
 	})
