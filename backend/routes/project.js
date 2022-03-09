@@ -66,6 +66,56 @@ router.post(
 	}
 );
 
+router.post(
+	"/:projectName/promote/:username",
+	authOnlyMiddleware,
+	async (req, res) => {
+		try {
+			// checking if project exists
+			const projects = await Project.find({ name: req.params.projectName });
+			if (projects.length == 0)
+				return res.status(400).json({ msg: "project does not exist" });
+
+			if (!projects[0].members.includes(req.params.username))
+				return res.status(400).json({ msg: "user not in members" });
+
+			projects[0].members = projects[0].members.filter(
+				(e) => e != req.params.username
+			);
+			projects[0].admins.push(req.params.username);
+
+			res.json(await projects[0].save());
+		} catch (err) {
+			res.status(400).json({ msg: "invalid request", err });
+		}
+	}
+);
+
+router.post(
+	"/:projectName/demote/:username",
+	authOnlyMiddleware,
+	async (req, res) => {
+		try {
+			// checking if project exists
+			const projects = await Project.find({ name: req.params.projectName });
+			if (projects.length == 0)
+				return res.status(400).json({ msg: "project does not exist" });
+
+			if (!projects[0].admins.includes(req.params.username))
+				return res.status(400).json({ msg: "user not in admins" });
+
+			projects[0].admins = projects[0].admins.filter(
+				(e) => e != req.params.username
+			);
+			projects[0].members.push(req.params.username);
+
+			res.json(await projects[0].save());
+		} catch (err) {
+			res.status(400).json({ msg: "invalid request", err });
+		}
+	}
+);
+
 router.patch("/:projectName", authOnlyMiddleware, async (req, res) => {
 	try {
 		const props = Object.getOwnPropertyNames(req.body);
